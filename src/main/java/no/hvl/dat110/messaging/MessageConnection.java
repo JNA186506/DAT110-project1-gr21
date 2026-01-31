@@ -6,9 +6,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import no.hvl.dat110.TODO;
-
-
 public class MessageConnection {
 
 	private DataOutputStream outStream; // for writing bytes to the underlying TCP connection
@@ -23,7 +20,7 @@ public class MessageConnection {
 
 			outStream = new DataOutputStream(socket.getOutputStream());
 
-			inStream = new DataInputStream (socket.getInputStream());
+			inStream = new DataInputStream(socket.getInputStream());
 
 		} catch (IOException ex) {
 
@@ -32,36 +29,29 @@ public class MessageConnection {
 		}
 	}
 
-	public void send(Message message) {
+	public void send(Message message) throws IOException {
 
 		byte[] data;
-		
-		// TODO - START
-		// encapsulate the data contained in the Message and write to the output stream
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-			
-		// TODO - END
 
+        data = MessageUtils.encapsulate(message);
+		
+        outStream.write(data);
+        
 	}
 
-	public Message receive() {
-
-		Message message = null;
-		byte[] data;
-		
-		// TODO - START
-		// read a segment from the input stream and decapsulate data into a Message
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - END
-		
-		return message;
-		
-	}
+    public Message receive() throws IOException {
+        byte[] segment = new byte[MessageUtils.SEGMENTSIZE];
+        
+        int read = 0;
+        while (read < segment.length) {
+            int r = inStream.read(segment, read, segment.length - read);
+            if (r == -1) {
+                throw new IOException("Stream closed before full segment was received");
+            }
+            read += r;
+        }
+        return MessageUtils.decapsulate(segment);
+    }
 
 	// close the connection by closing streams and the underlying socket	
 	public void close() {

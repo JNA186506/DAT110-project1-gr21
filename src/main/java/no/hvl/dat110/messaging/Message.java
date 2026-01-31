@@ -11,10 +11,17 @@ public class Message {
 	public Message(byte[] data) {
 		
 		// TODO - START
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.constructor("Message"));
-			
+        
+        if (data == null) {
+            throw new IllegalArgumentException("Data cannot be null");
+        }
+        
+        if (data.length > 127) {
+            throw new IllegalArgumentException("Data cannot exceed 127 length");
+        }
+        
+        this.data = data.clone();
+
 		// TODO - END
 	}
 

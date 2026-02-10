@@ -66,11 +66,7 @@ public class RPCUtils {
 	}
 	
 	public static void unmarshallVoid(byte[] data) {
-		byte[] actualDataArray = new byte[data.length - 1];
-
-		System.arraycopy(data, 1, actualDataArray, 0, data.length - 1);
-
-		if (actualDataArray.length != 0) {
+		if (data.length != 0) {
 			throw new IllegalArgumentException("Expected no data...");
 		}
 	}

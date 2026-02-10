@@ -33,21 +33,11 @@ public class RPCClient {
 
 	public byte[] call(byte rpcid, byte[] param) {
 		
-		byte[] returnval;
-		
-		// TODO - START
-
-		/*
-
-		The rpcid and param must be encapsulated according to the RPC message format
-
-		The return value from the RPC call must be decapsulated according to the RPC message format
-
-		*/
-
-		returnval = RPCUtils.encapsulate(rpcid, param);
-
-		// TODO - END
+        byte[] request = RPCUtils.encapsulate(rpcid, param);
+        connection.send(new Message(request));
+        Message replymsg = connection.receive();
+        byte[] returnval = RPCUtils.decapsulate(replymsg.getData());
+        
 		return returnval;
 		
 	}

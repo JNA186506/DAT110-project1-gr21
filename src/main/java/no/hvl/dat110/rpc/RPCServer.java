@@ -51,22 +51,16 @@ public class RPCServer {
 		   // - encapsulate return value 
 		   // - send back the message containing the RPC reply
 			requestmsg = connection.receive();
-
-			byte[] rmsgDecapsulated = RPCUtils.decapsulate(requestmsg.getData());
-			byte methodCall = rmsgDecapsulated[0];
-
-			byte[] param = new byte[rmsgDecapsulated.length - 1];
-			System.arraycopy(rmsgDecapsulated, 1, param, 0, param.length);
-
-			RPCRemoteImpl method = services.get(methodCall);
-
-			byte[] replyval = method.invoke(param);
-			byte[] replyBytes = RPCUtils.encapsulate(methodCall, replyval);
-
-			replymsg = new Message(replyBytes);
-			connection.send(replymsg);
-
-		   // TODO - END
+            
+            byte[] raw = requestmsg.getData();
+            rpcid = raw[0];
+            byte[] param = RPCUtils.decapsulate(raw);
+            
+            RPCRemoteImpl method = services.get(rpcid);
+            byte[] returnval = method.invoke(param);
+            
+            byte[] replyraw = RPCUtils.encapsulate(rpcid, returnval);
+            connection.send(new Message(replyraw));
 
 			// stop the server if it was stop methods that was called
 		   if (rpcid == RPCCommon.RPIDSTOP) {

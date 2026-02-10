@@ -29,24 +29,33 @@ public class MessageConnection {
 		}
 	}
 
-	public void send(Message message) throws IOException {
+	public void send(Message message) {
 
 		byte[] data;
 
         data = MessageUtils.encapsulate(message);
-		
-        outStream.write(data);
+
+		try {
+			outStream.write(data);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to send message " + e.getMessage());
+		}
         
 	}
 
-    public Message receive() throws IOException {
+    public Message receive() {
         byte[] segment = new byte[MessageUtils.SEGMENTSIZE];
         
         int read = 0;
+		int r;
         while (read < segment.length) {
-            int r = inStream.read(segment, read, segment.length - read);
+			try {
+				r = inStream.read(segment, read, segment.length - read);
+			} catch (IOException e) {
+				throw new RuntimeException("Failed to recieve message " + e.getMessage());
+			}
             if (r == -1) {
-                throw new IOException("Stream closed before full segment was received");
+				throw new RuntimeException("Connection closed too early");
             }
             read += r;
         }

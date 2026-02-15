@@ -108,6 +108,11 @@ public class RPCUtils {
 	// byte array representation to integer
 	public static int unmarshallInteger(byte[] data) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+
+        if (byteBuffer.remaining() < 4) {
+            return 0;
+        }
+
 		int decoded = byteBuffer.getInt();
 
 		return decoded;

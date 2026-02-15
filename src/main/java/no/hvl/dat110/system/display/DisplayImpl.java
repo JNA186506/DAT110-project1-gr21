@@ -5,6 +5,8 @@ import no.hvl.dat110.rpc.RPCRemoteImpl;
 import no.hvl.dat110.rpc.RPCUtils;
 import no.hvl.dat110.rpc.RPCServer;
 
+import java.util.WeakHashMap;
+
 public class DisplayImpl extends RPCRemoteImpl {
 
 	public DisplayImpl(byte rpcid, RPCServer rpcserver) {
@@ -19,12 +21,18 @@ public class DisplayImpl extends RPCRemoteImpl {
 		
 		byte[] returnval = null;
 		
-		// TODO - START: 
+		// TODO - START:
+
+        String message = RPCUtils.unmarshallString(param);
+        write(message);
+
+        returnval = RPCUtils.marshallVoid();
+
 		// implement unmarshalling, call, and marshall for write RPC method
 		// look at how this is done in the SensorImpl class for the read method
 		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
+		//if (true)
+		//	throw new UnsupportedOperationException(TODO.method());
 		
 		// TODO - END
 		
